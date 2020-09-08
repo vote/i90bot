@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+mypy = "*"
+autoflake = "*"
+isort = "*"
+pytest = "*"
+
+[packages]
+boto3 = "*"
+sentry-sdk = "*"
+requests = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
+
+[scripts]
+autoflake = "autoflake --remove-unused-variables --remove-all-unused-imports --ignore-init-module-imports -i --recursive app"
+isort = "isort --recursive app"
+black = "black app"
+mypy = "mypy app"
+pytest = "bash -c 'pytest app'"
+test = "bash -c 'pipenv run mypy && pipenv run pytest'"
+format = "bash -c 'pipenv run autoflake && pipenv run isort && pipenv run black'"
+lambda_test = "python utils/test.py"

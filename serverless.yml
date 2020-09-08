@@ -1,0 +1,108 @@
+service: i90bot
+
+provider:
+  name: aws
+  runtime: python3.7
+
+  # The default stage is the "local" stage; CI can deploy other stages (dev and prod)
+  stage: local
+
+  # We use us-west-2 as our AWS region
+  region: us-west-2
+
+  # 30-second timeout by default
+  timeout: 30
+
+  # Tags that will be added to each of the deployment resources
+  tags:
+      env: ${self:custom.stage}
+
+  # Environment variables
+  environment:
+    # Sentry integration: sends Lambda errors to Sentry. Remove this if you don't want to
+    # use Sentry
+    SENTRY_DSN: ${ssm:i90bot.common.sentry_dsn~true}
+    SENTRY_ENVIRONMENT: ${self:custom.stage}
+
+    # The Slack Signing Secret (from your Slack App configuration). This is
+    # configured per-stage -- e.g. i90bot.local.slack_signing_secret
+    SLACK_SIGNING_SECRET: ${ssm:i90bot.${self:custom.stage}.slack_signing_secret~true}
+
+    # The i90 API key
+    I90_API_KEY: ${ssm:i90bot.common.api_key~true}
+
+  # Memory allocated to each lambda function
+  memorySize: 256
+
+package:
+  exclude:
+    - 'node_modules/**'
+    - '.vscode/**'
+    - '.mypy_cache/**'
+    - 'package.json'
+    - 'yarn.lock'
+
+
+
+plugins:
+  # This plugin installs our python dependencies, using docker to properly compile
+  # them for Lambda
+  - serverless-python-requirements
+
+  # Clean up old versions so we don't exceed our code storage quota
+  - serverless-prune-plugin
+
+  # Datadog integration: remove this if you don't use datadog
+  - serverless-plugin-datadog
+
+custom:
+  # Specify how to build our python dependencies, and which ones are
+  # already available in Lambda and don't need to be bundled with the
+  # application
+  pythonRequirements:
+    dockerizePip: true
+    noDeploy: [
+      'boto3',
+      'botocore',
+      'docutils',
+      'jmespath',
+      'python-dateutil',
+      's3transfer',
+      'six',
+      'pip',
+      'setuptools'
+    ]
+
+  # Make stage/region accessible to other parts of the config
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+
+  # Configure DataDog integration. If you've removed serverless-plugin-datadog
+  # above, you can remove this. flushMetricsToLogs requires that you have
+  # the datadog forwarder installed; see
+  # https://github.com/DataDog/datadog-serverless-functions/tree/master/aws/logs_monitoring#installation
+  # for details.
+  datadog:
+    flushMetricsToLogs: true
+
+  # Automatically remove old function versions to avoid filling up your lambda code storage
+  # quota.
+  prune:
+    automatic: true
+    number: 3
+
+
+functions:
+  shorten:
+    handler: app.shorten.handler
+    events:
+    - http:
+        method: POST
+        path: /shorten
+    # Slack has very short timeouts for slash commands, so we provision
+    # concurrency to keep it snappy. We only use 256MB of memory for this
+    # function, so the provisioned concurrency only costs $5/mo.
+    provisionedConcurrency: 2
+
+
+
