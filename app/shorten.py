@@ -1,14 +1,14 @@
 import hashlib
 import hmac
-import boto3
+import json
 import os
+import re
+import urllib.parse
+from typing import Any
+
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-from typing import Any
-import json
-import urllib.parse
-import re
 
 slack_signing_secret = bytes(os.environ["SLACK_SIGNING_SECRET"], "utf-8")
 api_key = os.environ["I90_API_KEY"]
