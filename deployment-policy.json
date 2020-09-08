@@ -58,6 +58,7 @@
         "lambda:InvokeFunction",
         "lambda:PublishVersion",
         "lambda:RemovePermission",
+        "lambda:PutProvisionedConcurrencyConfig",
         "lambda:Update*"
       ],
       "Resource": [
@@ -178,6 +179,25 @@
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:GET",
+        "apigateway:POST",
+        "apigateway:PUT",
+        "apigateway:DELETE",
+        "apigateway:PATCH",
+        "apigateway:UpdateRestApiPolicy"
+      ],
+      "Resource": [
+        "arn:aws:apigateway:*::/restapis*",
+        "arn:aws:apigateway:*::/apikeys*",
+        "arn:aws:apigateway:*::/usageplans*",
+        "arn:aws:apigateway:*::/apis*",
+        "arn:aws:apigateway:*::/domainnames*",
+        "arn:aws:apigateway:*::/tags*"
+      ]
     }
   ]
 }
