@@ -4,7 +4,7 @@ import json
 import os
 import re
 import urllib.parse
-from typing import Any
+from typing import Any, Dict
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -42,6 +42,16 @@ or you can type `/shorten https://example.com as some-name` to shorten a URL to 
 """
 
 
+def parse_qs(qs: str) -> Dict[str, str]:
+    return {k: v for k, v in urllib.parse.parse_qsl(qs)}
+
+
+def get_app_name(target_url: str) -> str:
+    target_url_parsed = urllib.parse.urlparse(target_url)
+    qs = parse_qs(target_url_parsed.query)
+    return qs.get("utm_source", "slack")
+
+
 def verify_slack_request(event: Any):
     """
     From: https://janikarhunen.fi/verify-slack-requests-in-aws-lambda-and-python
@@ -68,7 +78,7 @@ def verify_slack_request(event: Any):
 def handler(event: Any, context: Any):
     verify_slack_request(event)
 
-    params = {k: v for k, v in urllib.parse.parse_qsl(event["body"])}
+    params = parse_qs(event["body"])
 
     # Slack's formatting crap sometimes uses non-breaking spaces around URLs,
     # so we translate those to normal spaces
@@ -78,7 +88,7 @@ def handler(event: Any, context: Any):
     if command.strip().lower() == "help":
         reply = HELP_TEXT
 
-    if len(command_parts) == 1 and command_parts[0].strip().lower() != "help":
+    elif len(command_parts) == 1 and command_parts[0].strip().lower() != "help":
         # just the URL
         url = command_parts[0]
         if not url_re.match(url):
@@ -89,7 +99,8 @@ def handler(event: Any, context: Any):
                 headers={"x-api-key": api_key,},
                 json={
                     "destination": url,
-                    "_app_name": "slack",
+                    "_app_name": get_app_name(url),
+                    "_created_via": "slack",
                     "_slack_user_name": params["user_name"],
                 },
             )
@@ -117,7 +128,8 @@ def handler(event: Any, context: Any):
                 json={
                     "token": token,
                     "destination": url,
-                    "_app_name": "slack",
+                    "_app_name": get_app_name(url),
+                    "_created_via": "slack",
                     "_slack_user_name": params["user_name"],
                 },
             )
@@ -127,6 +139,7 @@ def handler(event: Any, context: Any):
             else:
                 resp.raise_for_status()
                 reply = f"Success! {resp.json()['short_url']} now goes to {url}"
+
     else:
         # Print usage
         print(command_parts)
