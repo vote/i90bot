@@ -4,8 +4,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "cloudformation:List*",
-        "cloudformation:Get*",
         "cloudformation:ValidateTemplate"
       ],
       "Resource": [
@@ -19,24 +17,11 @@
         "cloudformation:CreateUploadBucket",
         "cloudformation:DeleteStack",
         "cloudformation:Describe*",
-        "cloudformation:UpdateStack"
+        "cloudformation:UpdateStack",
+        "cloudformation:ListStackResources"
       ],
       "Resource": [
         "arn:aws:cloudformation:us-west-2:*:stack/i90bot-*/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "lambda:Get*",
-        "lambda:List*",
-        "lambda:CreateFunction",
-        "lambda:ListTags",
-        "lambda:TagResource",
-        "lambda:UntagResource"
-      ],
-      "Resource": [
-        "*"
       ]
     },
     {
@@ -59,7 +44,9 @@
         "lambda:PublishVersion",
         "lambda:RemovePermission",
         "lambda:PutProvisionedConcurrencyConfig",
-        "lambda:Update*"
+        "lambda:Update*",
+        "lambda:List*",
+        "lambda:Get*"
       ],
       "Resource": [
         "arn:aws:lambda:us-west-2:*:function:i90bot-*-*"
@@ -68,7 +55,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "iam:PassRole"
+        "iam:PassRole",
+        "iam:GetRole"
       ],
       "Resource": [
         "arn:aws:iam::*:role/i90bot-*"
@@ -76,94 +64,8 @@
     },
     {
       "Effect": "Allow",
-      "Action": "kinesis:*",
-      "Resource": [
-        "arn:aws:kinesis:*:*:stream/i90bot-*-us-west-2"
-      ]
-    },
-    {
-      "Effect": "Allow",
       "Action": [
-        "iam:GetRole",
-        "iam:CreateRole",
-        "iam:PutRolePolicy",
-        "iam:DeleteRolePolicy",
-        "iam:DeleteRole",
-        "iam:AttachRolePolicy"
-      ],
-      "Resource": [
-        "arn:aws:iam::*:role/i90bot-*-us-west-2-lambdaRole"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cloudwatch:GetMetricStatistics"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream"
-      ],
-      "Resource": [
-        "arn:aws:logs:us-west-2:*:*"
-      ],
-      "Effect": "Allow"
-    },
-    {
-      "Action": [
-        "logs:PutLogEvents"
-      ],
-      "Resource": [
-        "arn:aws:logs:us-west-2:*:*"
-      ],
-      "Effect": "Allow"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:DescribeLogStreams",
-        "logs:DescribeLogGroups",
-        "logs:FilterLogEvents"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "events:Put*",
-        "events:Remove*",
-        "events:Delete*"
-      ],
-      "Resource": [
-        "arn:aws:events:*:*:rule/i90bot-*-us-west-2"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "events:DescribeRule"
-      ],
-      "Resource": [
-        "arn:aws:events:us-west-2:*:rule/i90bot-*-*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssm:DescribeParameters"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
+        "ssm:DescribeParameters",
         "ssm:GetParameter",
         "ssm:GetParameters"
       ],
@@ -191,12 +93,17 @@
         "apigateway:UpdateRestApiPolicy"
       ],
       "Resource": [
-        "arn:aws:apigateway:*::/restapis*",
-        "arn:aws:apigateway:*::/apikeys*",
-        "arn:aws:apigateway:*::/usageplans*",
-        "arn:aws:apigateway:*::/apis*",
-        "arn:aws:apigateway:*::/domainnames*",
-        "arn:aws:apigateway:*::/tags*"
+        "arn:aws:apigateway:us-west-2::/restapis/jlaof75t02/*",
+        "arn:aws:apigateway:us-west-2::/restapis/1jqyu2uwr5/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:GET"
+      ],
+      "Resource": [
+        "arn:aws:apigateway:us-west-2::/restapis"
       ]
     }
   ]
