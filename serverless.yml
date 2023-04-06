@@ -21,15 +21,15 @@ provider:
   environment:
     # Sentry integration: sends Lambda errors to Sentry. Remove this if you don't want to
     # use Sentry
-    SENTRY_DSN: ${ssm:i90bot.common.sentry_dsn~true}
+    SENTRY_DSN: ${ssm:i90bot.common.sentry_dsn}
     SENTRY_ENVIRONMENT: ${self:custom.stage}
 
     # The Slack Signing Secret (from your Slack App configuration). This is
     # configured per-stage -- e.g. i90bot.local.slack_signing_secret
-    SLACK_SIGNING_SECRET: ${ssm:i90bot.${self:custom.stage}.slack_signing_secret~true}
+    SLACK_SIGNING_SECRET: ${ssm:i90bot.${self:custom.stage}.slack_signing_secret}
 
     # The i90 API key
-    I90_API_KEY: ${ssm:i90bot.common.api_key~true}
+    I90_API_KEY: ${ssm:i90bot.common.api_key}
 
   # Memory allocated to each lambda function
   memorySize: 256
@@ -52,9 +52,6 @@ plugins:
   # Clean up old versions so we don't exceed our code storage quota
   - serverless-prune-plugin
 
-  # Datadog integration: remove this if you don't use datadog
-  - serverless-plugin-datadog
-
 custom:
   # Specify how to build our python dependencies, and which ones are
   # already available in Lambda and don't need to be bundled with the
@@ -76,14 +73,6 @@ custom:
   # Make stage/region accessible to other parts of the config
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
-
-  # Configure DataDog integration. If you've removed serverless-plugin-datadog
-  # above, you can remove this. flushMetricsToLogs requires that you have
-  # the datadog forwarder installed; see
-  # https://github.com/DataDog/datadog-serverless-functions/tree/master/aws/logs_monitoring#installation
-  # for details.
-  datadog:
-    flushMetricsToLogs: true
 
   # Automatically remove old function versions to avoid filling up your lambda code storage
   # quota.
