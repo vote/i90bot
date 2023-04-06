@@ -96,7 +96,9 @@ def handler(event: Any, context: Any):
         else:
             resp = http.post(
                 "https://go.voteamerica.com/v1/conceive",
-                headers={"x-api-key": api_key,},
+                headers={
+                    "x-api-key": api_key,
+                },
                 json={
                     "destination": url,
                     "_app_name": get_app_name(url),
@@ -124,7 +126,9 @@ def handler(event: Any, context: Any):
         else:
             resp = http.post(
                 "https://go.voteamerica.com/v1/claim",
-                headers={"x-api-key": api_key,},
+                headers={
+                    "x-api-key": api_key,
+                },
                 json={
                     "token": token,
                     "destination": url,
