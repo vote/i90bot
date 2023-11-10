@@ -16,7 +16,7 @@ api_key = os.environ["I90_API_KEY"]
 retry_strategy = Retry(
     total=3,
     status_forcelist=[429, 500, 502, 503, 504],
-    method_whitelist=["HEAD", "GET", "OPTIONS", "PUT"],
+    allowed_methods=["HEAD", "GET", "OPTIONS", "PUT"],
     backoff_factor=1,
 )
 adapter = HTTPAdapter(max_retries=retry_strategy)
