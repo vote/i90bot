@@ -11,6 +11,9 @@
     "husky": "^8.0.3",
     "serverless-prune-plugin": "^2.0.2"
   },
+  "resolutions": {
+    "js-yaml": "^4.1.1"
+  },
   "scripts": {
     "sls": "serverless",
     "prepare": "husky install"
