@@ -42,16 +42,6 @@ package:
     - 'package.json'
     - 'yarn.lock'
 
-
-
-plugins:
-  # This plugin installs our python dependencies, using docker to properly compile
-  # them for Lambda
-  - serverless-python-requirements
-
-  # Clean up old versions so we don't exceed our code storage quota
-  - serverless-prune-plugin
-
 custom:
   # Specify how to build our python dependencies, and which ones are
   # already available in Lambda and don't need to be bundled with the
