@@ -4,12 +4,10 @@
   "repository": "git@github.com:vote/i90bot.git",
   "private": true,
   "dependencies": {
-    "serverless": "^3.38.0",
-    "serverless-python-requirements": "^6.0.0"
+    "serverless": "^4.32.0"
   },
   "devDependencies": {
-    "husky": "^8.0.3",
-    "serverless-prune-plugin": "^2.0.2"
+    "husky": "^8.0.3"
   },
   "resolutions": {
     "js-yaml": "^4.1.1"
