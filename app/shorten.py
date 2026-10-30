@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 import requests
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util.retry import Retry
 
 slack_signing_secret = bytes(os.environ["SLACK_SIGNING_SECRET"], "utf-8")
 api_key = os.environ["I90_API_KEY"]

@@ -12,11 +12,11 @@ pytest = "*"
 
 [packages]
 boto3 = "*"
-sentry-sdk = "*"
+sentry-sdk = "<3"
 requests = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.13"
 
 [pipenv]
 allow_prereleases = true
